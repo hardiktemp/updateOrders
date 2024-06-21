@@ -28,7 +28,7 @@ def update_order():
     
     while moreOrders:
         response = requests.get(f"https://{shopify_url}/admin/api/2024-04/orders.json?since_id={startId}&limit=250&status=any")
-        print(f"https://{shopify_url}/admin/api/2024-04/orders.json?since_id={startId}&limit=250&status=any")
+        # print(f"https://{shopify_url}/admin/api/2024-04/orders.json?since_id={startId}&limit=250&status=any")
         if response.status_code == 200:
             data = response.json()
             orders = data['orders']
