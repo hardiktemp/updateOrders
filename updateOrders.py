@@ -21,8 +21,8 @@ def standardize_phone_number(phone):
 
 
 def update_order():
-    # startId = 6043926724891
-    startId = 6000724476187
+    startId = 6036183548187
+    # startId = 6000724476187
     # startId = 0
     moreOrders = True
     
