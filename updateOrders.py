@@ -9,7 +9,7 @@ load_dotenv()
 client = MongoClient(os.getenv('MONGO_URI'))
 shopify_url = os.getenv('SHOPIFY_API_KEY')
 
-db = client['orders']
+db = client['test']
 collection = db['orders']
 
 def standardize_phone_number(phone):
