@@ -3,10 +3,13 @@ import os
 from dotenv import load_dotenv
 import requests
 import re
+from datetime import datetime
+from dateutil.parser import isoparse
 
 load_dotenv()
 
 client = MongoClient(os.getenv('MONGO_URI'))
+print(os.getenv('MONGO_URI'))
 shopify_url = os.getenv('SHOPIFY_API_KEY')
 
 db = client['test']
@@ -21,14 +24,14 @@ def standardize_phone_number(phone):
 
 
 def update_order():
-    startId = 6036183548187
+    # startId = 6043926724891
     # startId = 6000724476187
-    # startId = 0
+    startId = 0
     moreOrders = True
     
     while moreOrders:
         response = requests.get(f"https://{shopify_url}/admin/api/2024-04/orders.json?since_id={startId}&limit=250&status=any")
-        # print(f"https://{shopify_url}/admin/api/2024-04/orders.json?since_id={startId}&limit=250&status=any")
+        print(f"https://{shopify_url}/admin/api/2024-04/orders.json?since_id={startId}&limit=250&status=any")
         if response.status_code == 200:
             data = response.json()
             orders = data['orders']
@@ -42,12 +45,11 @@ def update_order():
                 print(f"Processing order {order['order_number']}")
                 startId = order['id']
                 
-                mongoorder = {"id": order['id'], 'products': [] , 'order_number': order['order_number']}
-                mongoorder['cancelled'] = order['cancelled_at'] if order['cancelled_at'] else False
+                mongoorder = {"id": order['id'], 'products': [] , 'order_number': order['order_number'] , 'created_at': isoparse(order['created_at']),}
+                mongoorder['cancelled'] = isoparse(order['cancelled_at']) if order['cancelled_at'] else False
                 mongoorder['price'] = order['current_subtotal_price']
                 mongoorder['fullfilment_status'] = order['fulfillment_status']
                 mongoorder['financial_status'] = order['financial_status']
-                mongoorder['created_at'] = order['created_at']
                 mongoorder["status_url"] = order['order_status_url']
                 
                 phone = order['phone']  or  None
