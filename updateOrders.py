@@ -41,9 +41,9 @@ def update_order():
                 print(f"Processing order {order['order_number']}")
                 startId = order['id']
                 
-                mongoorder = {"id": order['id'], 'products': [] , 'order_number': order['order_number'] , 'created_at': isoparse(order['created_at']),}
+                mongoorder = {"id": order['id'], 'products': [] , 'order_number': int(order['order_number']) , 'created_at': isoparse(order['created_at']),}
                 mongoorder['cancelled'] = isoparse(order['cancelled_at']) if order['cancelled_at'] else False
-                mongoorder['price'] = order['current_total_price']
+                mongoorder['price'] = float(order['current_total_price'])
                 mongoorder['fullfilment_status'] = order['fulfillment_status']
                 mongoorder['financial_status'] = order['financial_status']
                 mongoorder["status_url"] = order['order_status_url']
