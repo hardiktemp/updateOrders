@@ -1,15 +1,13 @@
-from pymongo import MongoClient , UpdateOne
 import os
-from dotenv import load_dotenv
-import requests
 import re
-from datetime import datetime
+import requests
+from dotenv import load_dotenv
 from dateutil.parser import isoparse
+from pymongo import MongoClient , UpdateOne
 
 load_dotenv()
 
 client = MongoClient(os.getenv('MONGO_URI'))
-print(os.getenv('MONGO_URI'))
 shopify_url = os.getenv('SHOPIFY_API_KEY')
 
 db = client['test']
@@ -25,8 +23,6 @@ def standardize_phone_number(phone):
 
 def update_order():
     startId = 6043926724891
-    # startId = 6000724476187
-    # startId = 0
     moreOrders = True
     
     while moreOrders:
@@ -47,7 +43,7 @@ def update_order():
                 
                 mongoorder = {"id": order['id'], 'products': [] , 'order_number': order['order_number'] , 'created_at': isoparse(order['created_at']),}
                 mongoorder['cancelled'] = isoparse(order['cancelled_at']) if order['cancelled_at'] else False
-                mongoorder['price'] = order['current_subtotal_price']
+                mongoorder['price'] = order['current_total_price']
                 mongoorder['fullfilment_status'] = order['fulfillment_status']
                 mongoorder['financial_status'] = order['financial_status']
                 mongoorder["status_url"] = order['order_status_url']
