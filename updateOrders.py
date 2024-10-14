@@ -47,6 +47,17 @@ def update_order():
                 mongoorder['fullfilment_status'] = order['fulfillment_status']
                 mongoorder['financial_status'] = order['financial_status']
                 mongoorder["status_url"] = order['order_status_url']
+                customer = order['customer']
+                
+                if 'first_name' in customer and customer['first_name']:
+                    mongoorder["first_name"] = customer['first_name'].strip()
+                else:
+                        mongoorder["first_name"] = ''
+                
+                if 'last_name' in customer and customer['last_name']:
+                        mongoorder["last_name"] = customer['last_name'].strip()
+                else:
+                    mongoorder["last_name"] = ''
                 
                 phone = order['phone']  or  None
                 if not phone : 
