@@ -21,13 +21,11 @@ def standardize_phone_number(phone):
     return phone[-10:]
 
 
-def update_order():
-    startId = 6043926724891
+def update_order(startId = 6043926724891):
     moreOrders = True
     
     while moreOrders:
         response = requests.get(f"https://{shopify_url}/admin/api/2024-04/orders.json?since_id={startId}&limit=250&status=any")
-        print(f"https://{shopify_url}/admin/api/2024-04/orders.json?since_id={startId}&limit=250&status=any")
         if response.status_code == 200:
             data = response.json()
             orders = data['orders']
@@ -47,14 +45,18 @@ def update_order():
                 mongoorder['fullfilment_status'] = order['fulfillment_status']
                 mongoorder['financial_status'] = order['financial_status']
                 mongoorder["status_url"] = order['order_status_url']
+                if order['discount_codes']:
+                    mongoorder['discount_codes'] = order['discount_codes']
+                else:
+                    mongoorder['discount_codes'] = []
+
                 customer = order['customer']
-                
-                if 'first_name' in customer and customer['first_name']:
+                if customer and 'first_name' in customer and customer['first_name']:
                     mongoorder["first_name"] = customer['first_name'].strip()
                 else:
                         mongoorder["first_name"] = ''
                 
-                if 'last_name' in customer and customer['last_name']:
+                if customer and 'last_name' in customer and customer['last_name']:
                         mongoorder["last_name"] = customer['last_name'].strip()
                 else:
                     mongoorder["last_name"] = ''
@@ -94,7 +96,13 @@ def update_order():
 
 def main():
     while(True):
-        update_order()
+        local_system = os.getenv('LOCAL_SYSTEM')
+        if local_system == 'True':
+            start_id = 5501152657691 # order 1001
+            update_order(startId=start_id)
+            break
+        else:
+            update_order()
 
 if __name__ == '__main__':
     main()
