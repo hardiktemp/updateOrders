@@ -44,6 +44,7 @@ def update_order(startId = 6139281572123):
                 mongoorder['cancelled'] = isoparse(order['cancelled_at']) if order['cancelled_at'] else False
                 mongoorder['price'] = float(order['current_total_price'])
                 mongoorder['fullfilment_status'] = order['fulfillment_status']
+                mongoorder['fulfillments'] = order['fulfillments']
                 mongoorder['financial_status'] = order['financial_status']
                 mongoorder["status_url"] = order['order_status_url']
                 if order['discount_codes']:
