@@ -21,7 +21,7 @@ def standardize_phone_number(phone):
     return phone[-10:]
 
 
-def update_order(startId = 6043926724891):
+def update_order(startId = 6139281572123):
     moreOrders = True
     
     while moreOrders:
@@ -102,7 +102,8 @@ def main():
             update_order(startId=start_id)
             break
         else:
-            update_order()
+            start_id = 6139281572123 # order 20000
+            update_order(startId=start_id)
 
 if __name__ == '__main__':
     main()
