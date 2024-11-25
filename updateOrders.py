@@ -35,8 +35,9 @@ def update_order(startId = 6139281572123):
             
             orderChunk = []
             bulk_operations = []
+            min_order = 10**8
+            max_order = 0
             for order in orders:
-                print(f"Processing order {order['order_number']}")
                 startId = order['id']
                 
                 mongoorder = {"id": order['id'], 'products': [] , 'order_number': int(order['order_number']) , 'created_at': isoparse(order['created_at']),}
@@ -80,14 +81,17 @@ def update_order(startId = 6139281572123):
                         }
                         mongoorder['products'].append(product_detail)
                 
+                min_order = min(min_order, mongoorder['order_number'])
+                max_order = max(max_order, mongoorder['order_number'])
+
                 orderChunk.append(mongoorder)
                 bulk_operations.append(
                     UpdateOne({"id": mongoorder["id"]}, {"$set": mongoorder}, upsert=True)
                 )
             
-            print(f"Inserting {len(orderChunk)} orders")
+            print(f"Min Order: {min_order} \nMax Order: {max_order}")
+            print(f"Processing {len(orderChunk)} orders\n")
             collection.bulk_write(bulk_operations)
-            print(f"Processed {len(orderChunk)} orders")
             if len(data['orders']) < 250:
                 moreOrders = False
         else:
