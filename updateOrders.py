@@ -46,7 +46,7 @@ def update_order(startId = 6139281572123):
                 mongoorder['fullfilment_status'] = order['fulfillment_status']
                 mongoorder['fulfillments'] = order['fulfillments']
                 mongoorder['financial_status'] = order['financial_status']
-                mongoorder["status_url"] = order['order_status_url']
+                mongoorder["status_url"] = order['order_status_url'].split('?')[0]
                 if order['discount_codes']:
                     mongoorder['discount_codes'] = order['discount_codes']
                 else:
